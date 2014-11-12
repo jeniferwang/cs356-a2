@@ -7,7 +7,6 @@ import cs356.a2.logic.GroupTree;
 import cs356.a2.logic.TreeNode;
 
 // Class that handles Admin roles
-
 public class Admin {
 	
 	private HashMap<Integer, String> users = new HashMap<Integer, String>();
@@ -19,7 +18,8 @@ public class Admin {
 	private TreeNode root;
 
 	// Initialize mapping and setting "Root" group
-	Admin() {
+	public Admin() {
+		// Create a root group and set the root node
 		random = new Random();
 		randomGroupID = random.nextInt(500) + 1;
 		group = new UserGroup();
