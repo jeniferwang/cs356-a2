@@ -2,7 +2,9 @@ package cs356.a2.users;
 
 import java.util.ArrayList;
 
-public class User {
+import cs356.a2.visitor.Visitor;
+
+public class User implements Users {
 
 	private int userID;
 	private String name;
@@ -63,6 +65,11 @@ public class User {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitUser(this);
 	}
 
 }

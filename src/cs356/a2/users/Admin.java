@@ -5,6 +5,7 @@ import java.util.Random;
 
 import cs356.a2.logic.GroupTree;
 import cs356.a2.logic.TreeNode;
+import cs356.a2.visitor.AdminVisitor;
 
 // Class that handles Admin roles
 public class Admin {
@@ -16,6 +17,7 @@ public class Admin {
 	private int randomUserID, randomGroupID;
 	private GroupTree groupTree;
 	private TreeNode root;
+	private AdminVisitor adminVisitor;
 
 	// Initialize mapping and setting "Root" group
 	public Admin() {
@@ -28,8 +30,13 @@ public class Admin {
 		groupTree = new GroupTree();
 		groupTree.setTree(root.getValue(), group);
 		
+		// Create AdminVisitor()
+		adminVisitor = new AdminVisitor();
+		group.accept(adminVisitor);
+		
 		// User group test case
 		addNewUser("Bob");
+		addNewUser("Bill");
 		addNewUserGroup("Othello", group);
 		addThisUserToGroup();
 		groupTree.print(root);
@@ -43,6 +50,7 @@ public class Admin {
 		}
 		user = new User();
 		user.addUser(randomUserID, name);
+		user.accept(adminVisitor);
 	}
 	
 	// Add a new user group
@@ -54,6 +62,7 @@ public class Admin {
 		group = new UserGroup();
 		group.setGroup(randomGroupID, name, parent);
 		groupTree.setTree(group, group.getParentGroup());
+		group.accept(adminVisitor);
 	}
 	
 	// Add user to the group
@@ -63,4 +72,19 @@ public class Admin {
 		}
 	}
 	
+	public int getTotalUsers() {
+		return adminVisitor.getTotalUser();
+	}
+	
+	public int getTotalUserGroups() {
+		return adminVisitor.getTotalGroup();
+	}
+	
+	public int getTotalMessages() {
+		return adminVisitor.getTotalMessages();
+	}
+	
+	public double getTotalPositiveMessages() {
+		return adminVisitor.getPositivePercentage();
+	}
 }

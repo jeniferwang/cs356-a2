@@ -1,6 +1,8 @@
 package cs356.a2.ui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -13,7 +15,7 @@ import javax.swing.tree.TreeSelectionModel;
 import cs356.a2.users.Admin;
 
 // Class that generates the basic layout of the Admin UI
-public class AdminUI implements UserInterface {
+public class AdminUI implements UserInterface, ActionListener {
 
 	private static AdminUI instance;
 	private Admin admin;
@@ -22,6 +24,8 @@ public class AdminUI implements UserInterface {
 	
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel model;
+	private JButton showUserButton;
+	private JButton showGroupButton;
 	
 	private AdminUI() {};
 	
@@ -113,8 +117,14 @@ public class AdminUI implements UserInterface {
 		JPanel bottomRightPanel = new JPanel();
 		bottomRightPanel.setLayout(new GridLayout(2,2));
 		
-		JButton showUserButton = new JButton("Show User Total");
-		JButton showGroupButton = new JButton("Show User Group Total");
+		showUserButton = new JButton("Show User Total");
+		
+		showUserButton.addActionListener(this);
+		
+		showGroupButton = new JButton("Show User Group Total");
+		
+		showGroupButton.addActionListener(this);
+		
 		JButton showMessagesButton = new JButton("Show Messages Total");
 		JButton showPositiveButton = new JButton("Show Positive Percentage");
 		
@@ -132,6 +142,19 @@ public class AdminUI implements UserInterface {
 		
 		((GridBagLayout) layout).setConstraints(rightPanel, gbc);
 		frame.add(rightPanel);
+	}
+	
+	public void actionPerformed(ActionEvent evt) {
+		Object src = evt.getSource();
+		if (src == showUserButton) {
+			JOptionPane.showMessageDialog(frame,
+			"Total number of users : " + admin.getTotalUsers(), 
+			"Show User Total", JOptionPane.PLAIN_MESSAGE);
+		} else if (src == showGroupButton){
+			JOptionPane.showMessageDialog(frame,
+			"Total number of user groups : " + admin.getTotalUserGroups(), 
+			"Show User Total", JOptionPane.PLAIN_MESSAGE);
+		}
 	}
 
 	@Override

@@ -2,7 +2,9 @@ package cs356.a2.users;
 
 import java.util.ArrayList;
 
-public class UserGroup {
+import cs356.a2.visitor.Visitor;
+
+public class UserGroup implements Users {
 
 	private int groupID;
 	private String groupName;
@@ -58,6 +60,11 @@ public class UserGroup {
 	// Returns the group's user list
 	public ArrayList<User> getUserList() {
 		return userList;
+	}
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visitUserGroups(this);
 	}	
 	
 }
