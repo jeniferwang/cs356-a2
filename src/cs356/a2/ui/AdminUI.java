@@ -7,12 +7,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
+import cs356.a2.logic.DynamicJTree;
 import cs356.a2.users.Admin;
+import cs356.a2.users.UserGroup;
 
 // Class that generates the basic layout of the Admin UI
 public class AdminUI implements UserInterface, ActionListener {
@@ -22,10 +28,11 @@ public class AdminUI implements UserInterface, ActionListener {
 	private JFrame frame;
 	private GridBagConstraints gbc;
 	
-	private DefaultMutableTreeNode root;
-	private DefaultTreeModel model;
 	private JButton showUserButton;
 	private JButton showGroupButton;
+	private String input;
+	
+	private DynamicJTree jtree;
 	
 	private AdminUI() {};
 	
@@ -39,6 +46,8 @@ public class AdminUI implements UserInterface, ActionListener {
 	@Override
 	public void init() {
 		admin = new Admin();
+		jtree = new DynamicJTree();
+		admin.setTree(jtree);
 		setFrame(700, 550);
 		setLayout(new GridBagLayout());		
 		showFrame();
@@ -66,16 +75,8 @@ public class AdminUI implements UserInterface, ActionListener {
 	public void generateLeftSide(LayoutManager layout) {
 		JPanel leftPanel = new JPanel();
 		leftPanel.setPreferredSize(new Dimension(390, 500));
+		leftPanel.setBackground(Color.WHITE);
 		leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
-		JTree jtree = new JTree();
-		root = new DefaultMutableTreeNode("Root");
-		model = new DefaultTreeModel(root);
-		jtree.setModel(model);
-		TreeSelectionModel tsm = jtree.getSelectionModel();
-		tsm.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		DefaultMutableTreeNode veg = new DefaultMutableTreeNode("Hello");
-		System.out.print(veg.getPath().toString());
 		
 		leftPanel.add(jtree);
 		
@@ -83,10 +84,31 @@ public class AdminUI implements UserInterface, ActionListener {
 		
 		// Popup menu
 		JPopupMenu menu = new JPopupMenu("Popup");
-		JMenuItem item1 = new JMenuItem("Add User");
-		JMenuItem item2 = new JMenuItem("Add User Group");
-		menu.add(item1);
-		menu.add(item2);
+		JMenuItem addUserItem = new JMenuItem("Add User");
+		JMenuItem addGroupItem = new JMenuItem("Add User Group");
+		
+		addUserItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				input = JOptionPane.showInputDialog(frame, "Enter User Name", 
+						"Create New User", JOptionPane.QUESTION_MESSAGE);
+				if (input != null) {
+					admin.addNewUser(input);
+				}
+			}
+		});
+		
+		addGroupItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				input = JOptionPane.showInputDialog(frame, "Enter Group Name", 
+						"Create New User Group", JOptionPane.QUESTION_MESSAGE);
+				if (input != null) {
+					admin.addNewUserGroup(input);
+				}
+			}
+		});
+		
+		menu.add(addUserItem);
+		menu.add(addGroupItem);
 		
 		MouseListener mouseListener = new MouseAdapter() {
 			public void mousePressed(MouseEvent mouseEvent) {
@@ -112,6 +134,15 @@ public class AdminUI implements UserInterface, ActionListener {
 		topRightPanel.add(tips);
 		
 		JButton openUserViewButton = new JButton("Open User View");
+		
+		openUserViewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				if (!jtree.isUserGroup()) {
+					admin.getSelectedUser(jtree.getSelectedNode());
+				}
+			}
+		});
+		
 		topRightPanel.add(openUserViewButton);
 		
 		JPanel bottomRightPanel = new JPanel();
@@ -144,6 +175,7 @@ public class AdminUI implements UserInterface, ActionListener {
 		frame.add(rightPanel);
 	}
 	
+	// Change to anonymous listener!
 	public void actionPerformed(ActionEvent evt) {
 		Object src = evt.getSource();
 		if (src == showUserButton) {
@@ -161,7 +193,6 @@ public class AdminUI implements UserInterface, ActionListener {
 	public void showFrame() {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-
 	}
 
 }

@@ -57,6 +57,17 @@ public class UserGroup implements Users {
 		return false;
 	}
 	
+	//Returns the user in the user group
+	public User getUser(String user) {
+		for (User u : userList) {
+			System.out.println("User in list: " + u.getName());
+			if(u.getName().equals(user)) {
+				return u;
+			}
+		}
+		return null;
+	}
+	
 	// Returns the group's user list
 	public ArrayList<User> getUserList() {
 		return userList;

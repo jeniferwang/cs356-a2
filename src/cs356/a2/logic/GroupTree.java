@@ -45,6 +45,38 @@ public class GroupTree {
 		return false;
 	}
 	
+	// Checks if user group exists in tree
+	public boolean groupExistsInTree(UserGroup userGroup) {
+		if (collectionMap.containsKey(userGroup)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// Return user group of selected node
+	public UserGroup getUserGroup(String userGroupName) {
+		Iterator<UserGroup> itr = collectionMap.keySet().iterator();
+		while (itr.hasNext()) {
+			UserGroup thisUserGroup = itr.next();
+			if (thisUserGroup.getGroupName().equals(userGroupName)) {
+				return thisUserGroup;
+			}
+		}
+		return null;
+	}
+	
+	// Return user of selected node
+	public User getUser(String userName) {
+		Iterator<UserGroup> itr = collectionMap.keySet().iterator();
+		while (itr.hasNext()) {
+			UserGroup thisUserGroup = itr.next();
+			User thisUser = thisUserGroup.getUser(userName);
+			return thisUser;
+		}
+		return null;
+	}
+	
 	// Print Test
 	public void print(TreeNode root) {
 		Iterator<Entry<UserGroup, TreeNode>> itr = collectionMap.entrySet().iterator();
