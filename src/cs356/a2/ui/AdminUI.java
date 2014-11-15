@@ -18,7 +18,6 @@ import javax.swing.SwingUtilities;
 
 import cs356.a2.logic.DynamicJTree;
 import cs356.a2.users.Admin;
-import cs356.a2.users.UserGroup;
 
 // Class that generates the basic layout of the Admin UI
 public class AdminUI implements UserInterface, ActionListener {

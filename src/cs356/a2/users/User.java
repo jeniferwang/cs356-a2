@@ -9,41 +9,32 @@ import cs356.a2.visitor.Visitor;
 public class User extends Observable implements Users, Observer {
 
 	private User user;
-	private int userID;
-	private String name;
-	private int groupID;
+	private String userID;
+	private String groupID;
 	private ArrayList<User> followers;
 	private ArrayList<User> followings;
 	private ArrayList<String> newsFeed;
 
-	public void setUserID(int userID) {
+	public void setUserID(String userID) {
 		this.userID = userID;
 	}
 	
-	public int getUserID() {
+	public String getUserID() {
 		return userID;
 	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 	
-	public String getName() {
-		return name;
-	}
-	
-	public void setGroupID(int groupID) {
+	public void setGroupID(String groupID) {
 		this.groupID = groupID;
 	}
 	
-	public int getGroupID() {
+	public String getGroupID() {
 		return groupID;
 	}
 	
 	// Add user
-	public void addUser(User user, int id, String name) {
+	public void addUser(User user, String userID, String groupID) {
 		this.user = user;
-		this.setName(name);
+		this.setUserID(userID);
 		this.setGroupID(groupID);
 		this.followers = new ArrayList<User>();
 		this.followings = new ArrayList<User>();
@@ -67,7 +58,7 @@ public class User extends Observable implements Users, Observer {
 	
 	// Add a new message to news feed and notify followers
 	public void addNews(String message) {
-		newsFeed.add(user.name + " : " + message);
+		newsFeed.add(user.userID + " : " + message);
 		setChanged();
 		notifyObservers(message);
 	}

@@ -1,8 +1,5 @@
 package cs356.a2.users;
 
-import java.util.HashMap;
-import java.util.Random;
-
 import cs356.a2.logic.DynamicJTree;
 import cs356.a2.logic.GroupTree;
 import cs356.a2.logic.TreeNode;
@@ -12,11 +9,9 @@ import cs356.a2.visitor.AdminVisitor;
 // Class that handles Admin roles
 public class Admin{
 	
-	private HashMap<Integer, String> users = new HashMap<Integer, String>();
-	private Random random;
+//	private HashMap<Integer, String> users = new HashMap<Integer, String>();
 	private User user;
 	private UserGroup group;
-	private int randomUserID, randomGroupID;
 	private GroupTree groupTree;
 	private TreeNode root;
 	private AdminVisitor adminVisitor;
@@ -25,77 +20,65 @@ public class Admin{
 	// Initialize mapping and setting "Root" group
 	public Admin() {
 		// Create a root group and set the root node
-		random = new Random();
-		randomGroupID = random.nextInt(500) + 1;
 		group = new UserGroup();
-		group.setGroup(randomGroupID, "Root", null);
+		group.setGroup("Root", null);
 		root = new TreeNode(group);
 		groupTree = new GroupTree();
 		groupTree.setTree(root.getValue(), group);
-		jtree.addObject(group.getGroupName(), group);
+		jtree.addObject(group.getGroupID(), group);
 		
-		// Create AdminVisitor()
 		adminVisitor = new AdminVisitor();
 		group.accept(adminVisitor);
-		
-		// User group test case
-//		addNewUser("Bob");
-//		addNewUser("Bill");
-//		addNewUser("Billy");
-//		addNewUserGroup("Othello", group);
-		addThisUserToGroup();
-		groupTree.print(root);
 	}
 	
 	// Add a new user
-	public void addNewUser(String userName) {
-		randomUserID = random.nextInt(500) + 1;
-		while (users.containsKey(randomUserID)) {
-			randomUserID = random.nextInt(500) + 1;
+	public void addNewUser(String userID) {
+		// Check if user exists
+		if (groupTree.userExistsInTree(userID)) {
+			// TODO handle if user id already exists
+		} else {
+			user = new User();
+			group = groupTree.getUserGroupFromTree(jtree.getSelectedNode());
+			user.addUser(user, userID, group.getGroupID());
+			group.addUserToGroup(user);
+			jtree.addObject(user.getUserID(), user);
+			user.accept(adminVisitor);
 		}
-		//String groupName = jtree.getSelectedUserGroup();
-		user = new User();
-		user.addUser(user, randomUserID, userName);
-		group = groupTree.getUserGroup(jtree.getSelectedNode());
-		group.addUserToGroup(user);
-		//user.setGroupID(groupTree.getUserGroup(jtree.getParentGroup().toString()).getGroupID());
-		jtree.addObject(user.getName(), user);
-		user.accept(adminVisitor);
-		
-		System.out.println("New user created: " + userName);
 	}
 	
 	// Add a new user group
-	public void addNewUserGroup(String name) {
-		randomGroupID = random.nextInt(500) + 1;
-		while (groupTree.getTree().containsKey(randomGroupID)) {
-			randomGroupID = random.nextInt(500) + 1;
-		}
-		UserGroup parentGroup = group;
-		group = new UserGroup();
-		if (jtree.getParentGroup() == null) {
-			group.setGroup(randomGroupID, name, parentGroup);
+	public void addNewUserGroup(String groupID) {
+		if (groupTree.groupExistsInTree(groupID)) {
+			// TODO handle if user group already exists
 		} else {
-			group.setGroup(randomGroupID, name, groupTree.getUserGroup(jtree.getParentGroup().toString()));
+			UserGroup parentGroup = group;
+			group = new UserGroup();
+			if (jtree.getParentGroup() == null) {
+				group.setGroup(groupID, parentGroup);
+			} else {
+				group.setGroup(groupID, groupTree.getUserGroupFromTree(jtree.getParentGroup().toString()));
+			}
+			jtree.addObject(group.getGroupID(), group);
+			groupTree.setTree(group, group.getParentGroup());
+			group.accept(adminVisitor);
 		}
-		jtree.addObject(group.getGroupName(), group);
-		groupTree.setTree(group, group.getParentGroup());
-		group.accept(adminVisitor);
 	}
 	
 	// Add user to the group
 	public void addThisUserToGroup() {
-		if (groupTree.userExistsInTree(user) == false) {
+		if (!groupTree.userExistsInTree(user.getUserID())) {
 			group.addUserToGroup(user);
 		}
 	}
 	
 	public void getUserView(User user) {
-		UserUI newUserUI = new UserUI(user);
+		if (user != null) {
+			UserUI newUserUI = new UserUI(user);
+		}
 	}
 	
 	public void getSelectedUser(String userName) {
-		User user = groupTree.getUser(userName);
+		User user = groupTree.getUserFromTree(userName);
 		getUserView(user);
 	}
 	

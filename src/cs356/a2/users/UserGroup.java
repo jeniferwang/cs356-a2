@@ -6,25 +6,16 @@ import cs356.a2.visitor.Visitor;
 
 public class UserGroup implements Users {
 
-	private int groupID;
-	private String groupName;
+	private String groupID;
 	private UserGroup parentGroup;
 	private ArrayList<User> userList;
 	
-	public void setGroupID(int groupID) {
+	public void setGroupID(String groupID) {
 		this.groupID = groupID;
 	}
 	
-	public int getGroupID() {
+	public String getGroupID() {
 		return groupID;
-	}
-	
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-	
-	public String getGroupName() {
-		return groupName;
 	}
 
 	public void setParentGroup(UserGroup parentGroup) {
@@ -36,10 +27,9 @@ public class UserGroup implements Users {
 	}
 	
 	// Sets a new group
-	public void setGroup(int id, String name, UserGroup parent) {
+	public void setGroup(String id, UserGroup parent) {
 		userList = new ArrayList<User>();
 		setGroupID(id);
-		setGroupName(name);
 		setParentGroup(parent);
 	}
 	
@@ -60,8 +50,8 @@ public class UserGroup implements Users {
 	//Returns the user in the user group
 	public User getUser(String user) {
 		for (User u : userList) {
-			System.out.println("User in list: " + u.getName());
-			if(u.getName().equals(user)) {
+			// System.out.println("User in list: " + u.getGroupID());
+			if(u.getGroupID().equals(user)) {
 				return u;
 			}
 		}
