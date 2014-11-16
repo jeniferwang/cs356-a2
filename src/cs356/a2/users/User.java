@@ -50,12 +50,26 @@ public class User extends Observable implements Users, Observer {
 	
 	// Add the user that this user is following
 	public void addFollowing(User following) {
-		if(userExists(followings, following) == false) {
+		System.out.println("Following " + following.getUserID());
+		System.out.println("T/F: " + userExists(followings, following));
+		if(!userExists(followings, following)) {
 			followings.add(following);
-			user.addObserver(following);
+			setChanged();
+			//notifyObservers(following.getUserID());
+			System.out.println("Iner here");
+			//user.addObserver(following);
 		}
 	}
 	
+	// Return a list of users this user is following
+	public ArrayList<String> getFollowing() {
+		ArrayList<String> list = new ArrayList<String>();
+		for (User u : followings) {
+			list.add(u.getUserID());
+		}
+		return list;
+	}
+
 	// Add a new message to news feed and notify followers
 	public void addNews(String message) {
 		newsFeed.add(user.userID + " : " + message);
@@ -69,11 +83,12 @@ public class User extends Observable implements Users, Observer {
 	
 	// Checks if user is already being followed or is following
 	public boolean userExists(ArrayList<User> followers, User user) {
-		if (followers.contains(user)) {
-			return true;
-		} else {
-			return false;
+		for (User u : followers) {
+			if (u.equals(user)) {
+				return true;
+			}
 		}
+		return false;
 	}
 
 	@Override

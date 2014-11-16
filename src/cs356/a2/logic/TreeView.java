@@ -14,7 +14,7 @@ import javax.swing.tree.TreeSelectionModel;
 import cs356.a2.users.User;
 import cs356.a2.users.UserGroup;
 
-public class DynamicJTree extends JPanel {
+public class TreeView extends JPanel {
 	
 	private DefaultMutableTreeNode rootNode;
 	private DefaultMutableTreeNode parentNode;
@@ -24,12 +24,11 @@ public class DynamicJTree extends JPanel {
     private String currentNode;
     private DefaultMutableTreeNode node;
     
-    public DynamicJTree() {
+    public TreeView() {
     	rootNode = new DefaultMutableTreeNode("Root");
 		treeModel = new DefaultTreeModel(rootNode);
 		tree = new JTree(treeModel);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setShowsRootHandles(true);
 		tree.setCellRenderer(new TreeRenderer());
 		
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -53,7 +52,6 @@ public class DynamicJTree extends JPanel {
 	public DefaultMutableTreeNode addObject(String name, Object child) {
 		parentNode = null;
 		parentPath = tree.getSelectionPath();
-		System.out.print(tree.getSelectionPath());
 		
 		if (parentPath == null) {
 			parentNode = rootNode;

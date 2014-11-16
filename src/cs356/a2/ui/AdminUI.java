@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-import cs356.a2.logic.DynamicJTree;
+import cs356.a2.logic.TreeView;
 import cs356.a2.users.Admin;
 
 // Class that generates the basic layout of the Admin UI
@@ -31,7 +31,7 @@ public class AdminUI implements UserInterface, ActionListener {
 	private JButton showGroupButton;
 	private String input;
 	
-	private DynamicJTree jtree;
+	private TreeView jtree;
 	
 	private AdminUI() {};
 	
@@ -45,7 +45,7 @@ public class AdminUI implements UserInterface, ActionListener {
 	@Override
 	public void init() {
 		admin = new Admin();
-		jtree = new DynamicJTree();
+		jtree = new TreeView();
 		admin.setTree(jtree);
 		setFrame(700, 550);
 		setLayout(new GridBagLayout());		

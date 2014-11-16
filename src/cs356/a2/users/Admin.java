@@ -1,8 +1,8 @@
 package cs356.a2.users;
 
-import cs356.a2.logic.DynamicJTree;
 import cs356.a2.logic.GroupTree;
 import cs356.a2.logic.TreeNode;
+import cs356.a2.logic.TreeView;
 import cs356.a2.ui.UserUI;
 import cs356.a2.visitor.AdminVisitor;
 
@@ -15,7 +15,7 @@ public class Admin{
 	private GroupTree groupTree;
 	private TreeNode root;
 	private AdminVisitor adminVisitor;
-	private DynamicJTree jtree = new DynamicJTree();;
+	private TreeView jtree = new TreeView();
 
 	// Initialize mapping and setting "Root" group
 	public Admin() {
@@ -73,7 +73,7 @@ public class Admin{
 	
 	public void getUserView(User user) {
 		if (user != null) {
-			UserUI newUserUI = new UserUI(user);
+			UserUI newUserUI = new UserUI(user, groupTree);
 		}
 	}
 	
@@ -98,7 +98,7 @@ public class Admin{
 		return adminVisitor.getPositivePercentage();
 	}
 
-	public void setTree(DynamicJTree jtree) {
+	public void setTree(TreeView jtree) {
 		this.jtree = jtree;
 		
 	}
