@@ -1,8 +1,8 @@
 package cs356.a2.ui;
 
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,15 +24,16 @@ import cs356.a2.users.User;
 public class UserUI implements UserInterface {
 
 	private JFrame frame;
-	private GridBagConstraints gbc;
 	private User user;
 	private GroupTree groupTree;
-	private boolean firstClick = true;
-	private DefaultListModel<String> followingListModel;
-	private JList<String> followingView;
+	private boolean firstUserClick = true;
+	private boolean firstMessageClick = true;
+	private DefaultListModel<String> followingListModel, messageListModel;
+	private JList<String> followingView, messageView;
 	private JPanel mainPanel;
-	private ArrayList<String> followingList;
-	private JPanel followingViewPanel;
+	private ArrayList<String> followingList, messageList;
+	private JPanel followingListPanel, messageListPanel;
+	private ArrayList<User> usersFollowing;
 	
 	public UserUI(User user, GroupTree groupTree) {
 		this.user = user;
@@ -43,7 +44,7 @@ public class UserUI implements UserInterface {
 	@Override
 	public void init() {
 		setFrame(700, 550);
-		setLayout(new GridBagLayout());		
+		setLayout(new FlowLayout());		
 		showFrame();
 	}
 
@@ -52,19 +53,29 @@ public class UserUI implements UserInterface {
 		frame = new JFrame();
 		frame.setTitle(user.getUserID() + "'s Profile");
 		frame.setSize(x, y);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	public void setLayout(LayoutManager layout) {
 		frame.getContentPane().setLayout(layout);
 		
-		mainPanel = new JPanel();
-		gbc = new GridBagConstraints();
+		GridLayout mainGrid = new GridLayout(2,1);
+		GridLayout gridSection = new GridLayout(1,2);
 		
-		gbc.weightx = 0;
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		mainPanel = new JPanel(mainGrid);
+		JPanel topPanel = new JPanel(mainGrid);
+		JPanel bottomPanel = new JPanel(mainGrid);
+		JPanel followingInputPanel = new JPanel(gridSection);
+		followingListPanel = new JPanel(new FlowLayout());
+		JPanel messageInputPanel = new JPanel(gridSection);
+		messageListPanel = new JPanel(new FlowLayout());
+		
+		mainPanel.add(topPanel);
+		mainPanel.add(bottomPanel);
+		topPanel.add(followingInputPanel);
+		topPanel.add(followingListPanel);
+		bottomPanel.add(messageInputPanel);
+		bottomPanel.add(messageListPanel);
 		
 		JTextField userIDTextField = new JTextField(20);
 		userIDTextField.setText("Enter User ID");
@@ -73,65 +84,128 @@ public class UserUI implements UserInterface {
 			public void mouseClicked(MouseEvent e) {
 				/*Check if it is user's first time clicking on text field. If true,
 				clear field; else, do nothing.*/
-				if (firstClick) {
+				if (firstUserClick) {
 					userIDTextField.setText("");
-					firstClick = false;
+					firstUserClick = false;
 				}
 			}
 		});
-		
-		mainPanel.add(userIDTextField, gbc);
-		
-		gbc.gridx = 1;
 		
 		JButton followUserButton = new JButton("Follow User");
 		followUserButton.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent ae) {
 				String userIDInput = userIDTextField.getText();
-				if (groupTree.userExistsInTree(userIDInput)) {
-					User addFollowingUser = groupTree.getUserFromTree(userIDInput);
-					user.addFollowing(addFollowingUser);
-					setFollowingList();
-					mainPanel.revalidate();
-					mainPanel.repaint();
+				if (!userIDInput.equals("")) {
+					if (groupTree.userExistsInTree(userIDInput)) {
+						User addFollowingUser = groupTree.getUserFromTree(userIDInput);
+						user.addFollowing(addFollowingUser);
+						refresh();
+					} else {
+						// TODO handle if user doesn't exist
+					}
 				} else {
-					// TODO handle if user doesn't exist
+					// TODO handle empty string
 				}
 			}
 		});
 		
-		mainPanel.add(followUserButton, gbc);
-		
-		gbc.weightx = 0;
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 3;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		
-		JLabel followingsLabel = new JLabel("Currently Following");
-		followingViewPanel = new JPanel();
+		JLabel followingsLabel = new JLabel("Currently Following: ");
 		followingView = null;
 		followingListModel = new DefaultListModel<String>();
-		
 		setFollowingList();
 		followingView = new JList<String>(followingListModel);
 		
-		followingViewPanel.add(followingsLabel);
-		followingViewPanel.add(followingView);
+		followingInputPanel.add(userIDTextField);
+		followingInputPanel.add(followUserButton);
+		followingListPanel.add(followingsLabel);
+		followingListPanel.add(followingView);
 		
-		mainPanel.add(followingViewPanel, gbc);
+		JTextField messageTextField = new JTextField(20);
+		messageTextField.setText("Enter a message");
+		
+		messageTextField.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e) {
+				/*Check if it is user's first time clicking on text field. If true,
+				clear field; else, do nothing.*/
+				if (firstMessageClick) {
+					messageTextField.setText("");
+					firstMessageClick = false;
+				}
+			}
+		});
+		
+		JButton messageButton = new JButton("Post Message");
+		messageButton.addActionListener(new ActionListener () {
+			public void actionPerformed(ActionEvent ae) {
+				String userMessage = messageTextField.getText();
+				if (!userMessage.equals("")) {
+					user.addNews(userMessage);
+					messageTextField.setText("");
+				} else {
+					// TODO Handle case when user enters blank message
+				}
+			}
+		});
+		
+		messageView = null;
+		JLabel messageLabel = new JLabel("News Feed");
+		messageListModel = new DefaultListModel<String>();
+		setMessageList();
+		messageView = new JList<String>(messageListModel);
+		
+		messageInputPanel.add(messageTextField);
+		messageInputPanel.add(messageButton);
+		messageListPanel.add(messageLabel);
+		messageListPanel.add(messageView);
+		
+		topPanel.add(followingInputPanel);
+		topPanel.add(followingListPanel);
+		bottomPanel.add(messageInputPanel);
+		bottomPanel.add(messageListPanel);
+		mainPanel.add(topPanel);
+		mainPanel.add(bottomPanel);
 		frame.add(mainPanel);
 		
 	}
 	
 	public void setFollowingList() {
-		followingList = user.getFollowing();
-		for(String s : followingList) {
-			followingListModel.clear();
-			followingListModel.addElement(s);
+		usersFollowing = user.getFollowing();
+		followingListModel.clear();
+		for(User u : usersFollowing) {
+			followingListModel.addElement(u.getUserID());
 		}
 		
 		followingView = new JList<String>(followingListModel);
+	}
+	
+	public void setMessageList() {
+		messageListModel.clear();
+		ArrayList<String> messages;
+		if (!(user.getLatestMessage() == null)) {
+			messages = user.getLatestMessage();
+			for(String message : messages) {
+				messageListModel.addElement(message);
+			}
+		}
+	}
+	
+	public void refresh() {
+		setFollowingList();
+		setMessageList();
+		mainPanel.revalidate();
+		mainPanel.repaint();
+	}
+	
+	public JFrame getFrame() {
+		return frame;
+	}
+	
+	public void refreshUI(UserUI userUI) {
+		userUI.refresh();
+	}
+	
+	public JPanel getMainPanel() {
+		return mainPanel;
 	}
 
 	@Override

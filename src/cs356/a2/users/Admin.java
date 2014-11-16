@@ -74,6 +74,7 @@ public class Admin{
 	public void getUserView(User user) {
 		if (user != null) {
 			UserUI newUserUI = new UserUI(user, groupTree);
+			user.setUserUI(newUserUI);
 		}
 	}
 	

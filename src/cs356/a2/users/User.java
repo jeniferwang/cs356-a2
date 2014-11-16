@@ -1,9 +1,11 @@
 package cs356.a2.users;
 
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Observer;
 import java.util.Observable;
 
+import cs356.a2.ui.UserUI;
 import cs356.a2.visitor.Visitor;
 
 public class User extends Observable implements Users, Observer {
@@ -13,14 +15,20 @@ public class User extends Observable implements Users, Observer {
 	private String groupID;
 	private ArrayList<User> followers;
 	private ArrayList<User> followings;
+	private ArrayList<String> messages;
 	private ArrayList<String> newsFeed;
-
+	public UserUI userUI;
+	
 	public void setUserID(String userID) {
 		this.userID = userID;
 	}
 	
 	public String getUserID() {
 		return userID;
+	}
+	
+	public void setUserUI(UserUI userUI) {
+		this.userUI = userUI;
 	}
 	
 	public void setGroupID(String groupID) {
@@ -39,6 +47,8 @@ public class User extends Observable implements Users, Observer {
 		this.followers = new ArrayList<User>();
 		this.followings = new ArrayList<User>();
 		this.newsFeed = new ArrayList<String>();
+		this.messages = new ArrayList<String>();
+		user.addObserver(user);
 	}
 	
 	// Add the users following this user
@@ -50,35 +60,29 @@ public class User extends Observable implements Users, Observer {
 	
 	// Add the user that this user is following
 	public void addFollowing(User following) {
-		System.out.println("Following " + following.getUserID());
-		System.out.println("T/F: " + userExists(followings, following));
 		if(!userExists(followings, following)) {
 			followings.add(following);
-			setChanged();
-			//notifyObservers(following.getUserID());
-			System.out.println("Iner here");
-			//user.addObserver(following);
+			following.addObserver(user);
 		}
 	}
 	
 	// Return a list of users this user is following
-	public ArrayList<String> getFollowing() {
-		ArrayList<String> list = new ArrayList<String>();
-		for (User u : followings) {
-			list.add(u.getUserID());
-		}
-		return list;
+	public ArrayList<User> getFollowing() {
+		return followings;
 	}
 
 	// Add a new message to news feed and notify followers
 	public void addNews(String message) {
 		newsFeed.add(user.userID + " : " + message);
 		setChanged();
-		notifyObservers(message);
+		notifyObservers(newsFeed.get(newsFeed.size() - 1));
 	}
 	
-	public String getLatestMessage() {
-		return newsFeed.get(newsFeed.size()-1);
+	public ArrayList<String> getLatestMessage() {
+		if (messages.size() > 0) {
+			return messages;
+		}
+		return null;
 	}
 	
 	// Checks if user is already being followed or is following
@@ -93,8 +97,8 @@ public class User extends Observable implements Users, Observer {
 
 	@Override
 	public void update(Observable observable, Object object) {
-		// Traverse through list and print all messages
-		System.out.println("New Message! " + ((User) observable).getLatestMessage());
+		messages.add(object.toString());
+		userUI.refresh();
 	}
 	
 	@Override
