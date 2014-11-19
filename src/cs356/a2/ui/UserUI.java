@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import cs356.a2.logic.GroupTree;
@@ -31,7 +32,6 @@ public class UserUI implements UserInterface {
 	private DefaultListModel<String> followingListModel, messageListModel;
 	private JList<String> followingView, messageView;
 	private JPanel mainPanel;
-	private ArrayList<String> followingList, messageList;
 	private JPanel followingListPanel, messageListPanel;
 	private ArrayList<User> usersFollowing;
 	
@@ -60,15 +60,16 @@ public class UserUI implements UserInterface {
 		frame.getContentPane().setLayout(layout);
 		
 		GridLayout mainGrid = new GridLayout(2,1);
-		GridLayout gridSection = new GridLayout(1,2);
 		
 		mainPanel = new JPanel(mainGrid);
 		JPanel topPanel = new JPanel(mainGrid);
+		//topPanel.setPreferredSize(new Dimension(500,100));
+		System.out.println(frame.getSize().width);
 		JPanel bottomPanel = new JPanel(mainGrid);
-		JPanel followingInputPanel = new JPanel(gridSection);
-		followingListPanel = new JPanel(new FlowLayout());
-		JPanel messageInputPanel = new JPanel(gridSection);
-		messageListPanel = new JPanel(new FlowLayout());
+		JPanel followingInputPanel = new JPanel();
+		followingListPanel = new JPanel();
+		JPanel messageInputPanel = new JPanel();
+		messageListPanel = new JPanel();
 		
 		mainPanel.add(topPanel);
 		mainPanel.add(bottomPanel);
@@ -114,11 +115,13 @@ public class UserUI implements UserInterface {
 		followingListModel = new DefaultListModel<String>();
 		setFollowingList();
 		followingView = new JList<String>(followingListModel);
+		JScrollPane followingScroll = new JScrollPane(followingView);
+		followingScroll.setPreferredSize(new Dimension(500,100));
 		
 		followingInputPanel.add(userIDTextField);
 		followingInputPanel.add(followUserButton);
 		followingListPanel.add(followingsLabel);
-		followingListPanel.add(followingView);
+		followingListPanel.add(followingScroll);
 		
 		JTextField messageTextField = new JTextField(20);
 		messageTextField.setText("Enter a message");
@@ -148,15 +151,17 @@ public class UserUI implements UserInterface {
 		});
 		
 		messageView = null;
-		JLabel messageLabel = new JLabel("News Feed");
+		JLabel messageLabel = new JLabel("News Feed :");
 		messageListModel = new DefaultListModel<String>();
 		setMessageList();
 		messageView = new JList<String>(messageListModel);
+		JScrollPane messageScroll = new JScrollPane(messageView);
+		messageScroll.setPreferredSize(new Dimension(500,100));
 		
 		messageInputPanel.add(messageTextField);
 		messageInputPanel.add(messageButton);
 		messageListPanel.add(messageLabel);
-		messageListPanel.add(messageView);
+		messageListPanel.add(messageScroll);
 		
 		topPanel.add(followingInputPanel);
 		topPanel.add(followingListPanel);

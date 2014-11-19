@@ -38,7 +38,7 @@ public class Admin{
 			// TODO handle if user id already exists
 		} else {
 			user = new User();
-			group = groupTree.getUserGroupFromTree(jtree.getSelectedNode());
+			group = groupTree.getUserGroupFromTree(jtree.getSelectedUserGroupNode().getGroupID());
 			user.addUser(user, userID, group.getGroupID());
 			group.addUserToGroup(user);
 			jtree.addObject(user.getUserID(), user);
@@ -78,8 +78,8 @@ public class Admin{
 		}
 	}
 	
-	public void getSelectedUser(String userName) {
-		User user = groupTree.getUserFromTree(userName);
+	public void getSelectedUser(User user) {
+//		User user = groupTree.getUserFromTree(users);
 		getUserView(user);
 	}
 	

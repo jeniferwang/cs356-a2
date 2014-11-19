@@ -73,7 +73,7 @@ public class AdminUI implements UserInterface, ActionListener {
 	
 	public void generateLeftSide(LayoutManager layout) {
 		JPanel leftPanel = new JPanel();
-		leftPanel.setPreferredSize(new Dimension(390, 500));
+		leftPanel.setPreferredSize(new Dimension(350, 500));
 		leftPanel.setBackground(Color.WHITE);
 		leftPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
@@ -137,7 +137,7 @@ public class AdminUI implements UserInterface, ActionListener {
 		openUserViewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if (!jtree.isUserGroup()) {
-					admin.getSelectedUser(jtree.getSelectedNode());
+					admin.getSelectedUser(jtree.getSelectedUserNode());
 				}
 			}
 		});

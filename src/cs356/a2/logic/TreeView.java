@@ -13,6 +13,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import cs356.a2.users.User;
 import cs356.a2.users.UserGroup;
+import cs356.a2.users.Users;
 
 public class TreeView extends JPanel {
 	
@@ -21,11 +22,17 @@ public class TreeView extends JPanel {
     private DefaultTreeModel treeModel;
     private JTree tree;
     private TreePath parentPath;
-    private String currentNode;
+    private Users currentNode;
+    private User currentUserNode;
     private DefaultMutableTreeNode node;
+    private TreeRenderer renderer;
+    private UserGroup rootGroup, currentUserGroupNode;
     
     public TreeView() {
-    	rootNode = new DefaultMutableTreeNode("Root");
+    	renderer = new TreeRenderer();
+    	rootGroup = new UserGroup();
+    	rootGroup.setGroup("Root", null);
+    	rootNode = new DefaultMutableTreeNode(rootGroup);
 		treeModel = new DefaultTreeModel(rootNode);
 		tree = new JTree(treeModel);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -40,7 +47,12 @@ public class TreeView extends JPanel {
 					return;
 				}
 				Object nodeInfo = node.getUserObject();
-				currentNode = (String) nodeInfo;
+				if (nodeInfo instanceof User) {
+					currentNode = (User) nodeInfo;
+				} else if (nodeInfo instanceof UserGroup) {
+					currentNode = (UserGroup) nodeInfo;
+				}
+//				currentNode = (String) nodeInfo;
 			}
 			
 		});
@@ -72,7 +84,7 @@ public class TreeView extends JPanel {
 	
 	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, Object child, 
 				String name, boolean shouldBeVisible) {
-		DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(name);
+		DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
 		
 		if (parent == null) {
 			parent = rootNode;
@@ -99,11 +111,20 @@ public class TreeView extends JPanel {
 	}
 
 	// Returns the currently selected node
-	public String getSelectedNode() {
-		if (currentNode == null) {
-			currentNode = "Root";
+	public User getSelectedUserNode() {
+		if (currentNode instanceof User) {
+			currentUserNode = (User) currentNode;
 		}
-		return currentNode;
+		return currentUserNode;
+	}
+	
+	public UserGroup getSelectedUserGroupNode() {
+		if ((currentNode != null) && (currentNode instanceof UserGroup)) {
+			currentUserGroupNode = (UserGroup) currentNode;
+		} else {
+			currentUserGroupNode = rootGroup;
+		}
+		return currentUserGroupNode;
 	}
 
 	// Checks if node allows children -> user group
