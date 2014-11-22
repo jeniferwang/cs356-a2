@@ -5,8 +5,8 @@ import cs356.a2.ui.UserUI;
 import cs356.a2.visitor.AdminVisitor;
 
 // Class that handles Admin roles
-public class Admin{
-	
+public class Admin {
+
 	private User user;
 	private UserGroup group;
 	private AdminVisitor adminVisitor;
@@ -18,7 +18,7 @@ public class Admin{
 		adminVisitor = new AdminVisitor();
 		group.accept(adminVisitor);
 	}
-	
+
 	// Add a new user
 	public void addNewUser(String userID) {
 		// Check if user exists
@@ -34,12 +34,12 @@ public class Admin{
 			user.accept(adminVisitor);
 		}
 	}
-	
+
 	// Add a new user group
 	public void addNewUserGroup(String groupID) {
 		if (jtree.nodeExists(groupID)) {
 			// TODO handle if user id already exists
-						System.out.println("Already exists!");
+			System.out.println("Already exists!");
 		} else {
 			UserGroup parentGroup = group;
 			group = new UserGroup();
@@ -52,7 +52,7 @@ public class Admin{
 			group.accept(adminVisitor);
 		}
 	}
-	
+
 	// Create User UI for User
 	public void getSelectedUserView(User user) {
 		if (user != null) {
@@ -60,25 +60,25 @@ public class Admin{
 			user.setUserUI(newUserUI);
 		}
 	}
-	
+
 	public int getTotalUsers() {
 		return adminVisitor.getTotalUser();
 	}
-	
+
 	public int getTotalUserGroups() {
 		return adminVisitor.getTotalGroup();
 	}
-	
+
 	public int getTotalMessages() {
 		return adminVisitor.getTotalMessages();
 	}
-	
+
 	public double getTotalPositiveMessages() {
 		return adminVisitor.getPositivePercentage();
 	}
 
 	public void setTree(TreeView jtree) {
 		this.jtree = jtree;
-		
+
 	}
 }

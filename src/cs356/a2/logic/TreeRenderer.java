@@ -14,26 +14,29 @@ import cs356.a2.users.User;
 import cs356.a2.users.UserGroup;
 
 public class TreeRenderer extends DefaultTreeCellRenderer {
-	
+
 	private JPanel renderer;
 	private JLabel nameLabel;
-	
+
 	public TreeRenderer() {
 		renderer = new JPanel();
 		nameLabel = new JLabel();
 		renderer.add(nameLabel);
 	}
-	
+
 	@Override
-	public Component getTreeCellRendererComponent(JTree tree, Object value, 
-			boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-		
-		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-		
+	public Component getTreeCellRendererComponent(JTree tree, Object value,
+			boolean sel, boolean expanded, boolean leaf, int row,
+			boolean hasFocus) {
+
+		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
+				row, hasFocus);
+
 		Component returnValue = null;
-		
+
 		if ((value != null) && (value instanceof DefaultMutableTreeNode)) {
-			Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
+			Object userObject = ((DefaultMutableTreeNode) value)
+					.getUserObject();
 			if (userObject instanceof User) {
 				User user = (User) userObject;
 				nameLabel.setText(user.getUserID());
@@ -52,18 +55,6 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
 			returnValue = renderer;
 		}
 		return returnValue;
-		
-//		if (value instanceof DefaultMutableTreeNode) {
-//			DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-//			if (node.getAllowsChildren()) {
-//				setIcon(UIManager.getIcon("FileView.directoryIcon"));
-//			} else {
-//				setIcon(UIManager.getIcon("FileView.fileIcon"));
-//			}
-//		}
-//		
-//		return this;
-		
 	}
 
 }

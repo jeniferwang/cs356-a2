@@ -18,27 +18,27 @@ public class User extends Observable implements Users, Observer {
 	private ArrayList<String> messages;
 	private ArrayList<String> newsFeed;
 	public UserUI userUI;
-	
+
 	public void setUserID(String userID) {
 		this.userID = userID;
 	}
-	
+
 	public String getUserID() {
 		return userID;
 	}
-	
+
 	public void setUserUI(UserUI userUI) {
 		this.userUI = userUI;
 	}
-	
+
 	public void setUserGroupID(String groupID) {
 		this.userGroupID = groupID;
 	}
-	
+
 	public String getUserGroupID() {
 		return userGroupID;
 	}
-	
+
 	// Add user
 	public void addUser(User user, String userID, String groupID) {
 		this.user = user;
@@ -50,22 +50,22 @@ public class User extends Observable implements Users, Observer {
 		this.messages = new ArrayList<String>();
 		user.addObserver(user);
 	}
-	
+
 	// Add the users following this user
 	public void addFollower(User follower) {
-		if(userExists(followers, follower) == false) {
+		if (userExists(followers, follower) == false) {
 			followers.add(follower);
 		}
 	}
-	
+
 	// Add the user that this user is following
 	public void addFollowing(User following) {
-		if(!userExists(followings, following)) {
+		if (!userExists(followings, following)) {
 			followings.add(following);
 			following.addObserver(user);
 		}
 	}
-	
+
 	// Return a list of users this user is following
 	public ArrayList<User> getFollowing() {
 		return followings;
@@ -78,14 +78,14 @@ public class User extends Observable implements Users, Observer {
 		setChanged();
 		notifyObservers(newsFeed.get(newsFeed.size() - 1));
 	}
-	
+
 	public ArrayList<String> getLatestMessage() {
 		if (messages.size() > 0) {
 			return messages;
 		}
 		return null;
 	}
-	
+
 	// Checks if user is already being followed or is following
 	public boolean userExists(ArrayList<User> followers, User user) {
 		for (User u : followers) {
@@ -101,7 +101,7 @@ public class User extends Observable implements Users, Observer {
 		messages.add(object.toString());
 		userUI.refresh();
 	}
-	
+
 	@Override
 	public void accept(Visitor visitor) {
 		this.visitor = visitor;
