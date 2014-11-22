@@ -1,6 +1,7 @@
 package cs356.a2.logic;
 
 import java.awt.Color;
+import java.util.Enumeration;
 
 import javax.swing.JPanel;
 import javax.swing.JTree;
@@ -38,8 +39,8 @@ public class TreeView extends JPanel {
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.setCellRenderer(new TreeRenderer());
 		
+		// Listens if selected node's value is changed
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
-
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
 				node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
@@ -52,9 +53,7 @@ public class TreeView extends JPanel {
 				} else if (nodeInfo instanceof UserGroup) {
 					currentNode = (UserGroup) nodeInfo;
 				}
-//				currentNode = (String) nodeInfo;
 			}
-			
 		});
 		
 		setBackground(Color.WHITE);
@@ -75,7 +74,7 @@ public class TreeView extends JPanel {
 	}
 	
 	public Object getParentGroup() {
-		return parentNode;
+		return parentNode.getUserObject();
 	}
 	
 	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, Object child, String name) {
@@ -89,7 +88,7 @@ public class TreeView extends JPanel {
 		if (parent == null) {
 			parent = rootNode;
 		}
-		
+
 		if (child instanceof User) {
 			childNode.setAllowsChildren(false);
 			// TODO handle case for adding user in user
@@ -106,11 +105,50 @@ public class TreeView extends JPanel {
 		if (shouldBeVisible) {
 			tree.scrollPathToVisible(new TreePath(childNode.getPath()));
 		}
-		
 		return childNode;
 	}
 
-	// Returns the currently selected node
+	// Returns true if ID already exists in tree, else false
+	public boolean nodeExists(String id) {
+		User thisUser;
+		UserGroup thisUserGroup;
+		String thisID = null;
+		Enumeration en = rootNode.breadthFirstEnumeration();
+		while(en.hasMoreElements()) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
+			Object nodeInfo = node.getUserObject();
+			if (nodeInfo instanceof User) {
+				thisUser = (User) nodeInfo;
+				thisID = thisUser.getUserID();
+			} else if (nodeInfo instanceof UserGroup) {
+				thisUserGroup = (UserGroup) nodeInfo;
+				thisID = thisUserGroup.getGroupID();
+			}
+			if (thisID.equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// Returns the User from userID
+	public User getUserFrom(String userID) {
+		User thisUser = null;
+		Enumeration en = rootNode.breadthFirstEnumeration();
+		while(en.hasMoreElements()) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
+			Object nodeInfo = node.getUserObject();
+			if (nodeInfo instanceof User) {
+				thisUser = (User) nodeInfo;
+				if (userID.equals(thisUser.getUserID())) {
+					return thisUser;
+				}
+			}
+		}
+		return thisUser;
+	}
+	
+	// Returns the currently selected node in User object
 	public User getSelectedUserNode() {
 		if (currentNode instanceof User) {
 			currentUserNode = (User) currentNode;
@@ -118,6 +156,7 @@ public class TreeView extends JPanel {
 		return currentUserNode;
 	}
 	
+	// Returns the currently selected node in UserGroup object
 	public UserGroup getSelectedUserGroupNode() {
 		if ((currentNode != null) && (currentNode instanceof UserGroup)) {
 			currentUserGroupNode = (UserGroup) currentNode;

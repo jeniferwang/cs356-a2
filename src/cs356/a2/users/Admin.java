@@ -1,7 +1,5 @@
 package cs356.a2.users;
 
-import cs356.a2.logic.GroupTree;
-import cs356.a2.logic.TreeNode;
 import cs356.a2.logic.TreeView;
 import cs356.a2.ui.UserUI;
 import cs356.a2.visitor.AdminVisitor;
@@ -9,24 +7,14 @@ import cs356.a2.visitor.AdminVisitor;
 // Class that handles Admin roles
 public class Admin{
 	
-//	private HashMap<Integer, String> users = new HashMap<Integer, String>();
 	private User user;
 	private UserGroup group;
-	private GroupTree groupTree;
-	private TreeNode root;
 	private AdminVisitor adminVisitor;
 	private TreeView jtree = new TreeView();
 
-	// Initialize mapping and setting "Root" group
+	// Initialize and accept AdminVisitor
 	public Admin() {
-		// Create a root group and set the root node
 		group = new UserGroup();
-		group.setGroup("Root", null);
-		root = new TreeNode(group);
-		groupTree = new GroupTree();
-		groupTree.setTree(root.getValue(), group);
-		jtree.addObject(group.getGroupID(), group);
-		
 		adminVisitor = new AdminVisitor();
 		group.accept(adminVisitor);
 	}
@@ -34,11 +22,12 @@ public class Admin{
 	// Add a new user
 	public void addNewUser(String userID) {
 		// Check if user exists
-		if (groupTree.userExistsInTree(userID)) {
+		if (jtree.nodeExists(userID)) {
 			// TODO handle if user id already exists
+			System.out.println("Already exists!");
 		} else {
 			user = new User();
-			group = groupTree.getUserGroupFromTree(jtree.getSelectedUserGroupNode().getGroupID());
+			group = jtree.getSelectedUserGroupNode();
 			user.addUser(user, userID, group.getGroupID());
 			group.addUserToGroup(user);
 			jtree.addObject(user.getUserID(), user);
@@ -48,39 +37,28 @@ public class Admin{
 	
 	// Add a new user group
 	public void addNewUserGroup(String groupID) {
-		if (groupTree.groupExistsInTree(groupID)) {
-			// TODO handle if user group already exists
+		if (jtree.nodeExists(groupID)) {
+			// TODO handle if user id already exists
+						System.out.println("Already exists!");
 		} else {
 			UserGroup parentGroup = group;
 			group = new UserGroup();
 			if (jtree.getParentGroup() == null) {
 				group.setGroup(groupID, parentGroup);
 			} else {
-				group.setGroup(groupID, groupTree.getUserGroupFromTree(jtree.getParentGroup().toString()));
+				group.setGroup(groupID, (UserGroup) jtree.getParentGroup());
 			}
 			jtree.addObject(group.getGroupID(), group);
-			groupTree.setTree(group, group.getParentGroup());
 			group.accept(adminVisitor);
 		}
 	}
 	
-	// Add user to the group
-	public void addThisUserToGroup() {
-		if (!groupTree.userExistsInTree(user.getUserID())) {
-			group.addUserToGroup(user);
-		}
-	}
-	
-	public void getUserView(User user) {
+	// Create User UI for User
+	public void getSelectedUserView(User user) {
 		if (user != null) {
-			UserUI newUserUI = new UserUI(user, groupTree);
+			UserUI newUserUI = new UserUI(user, jtree);
 			user.setUserUI(newUserUI);
 		}
-	}
-	
-	public void getSelectedUser(User user) {
-//		User user = groupTree.getUserFromTree(users);
-		getUserView(user);
 	}
 	
 	public int getTotalUsers() {

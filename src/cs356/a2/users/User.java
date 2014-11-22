@@ -1,6 +1,5 @@
 package cs356.a2.users;
 
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Observer;
 import java.util.Observable;
@@ -11,8 +10,9 @@ import cs356.a2.visitor.Visitor;
 public class User extends Observable implements Users, Observer {
 
 	private User user;
+	private Visitor visitor;
 	private String userID;
-	private String groupID;
+	private String userGroupID;
 	private ArrayList<User> followers;
 	private ArrayList<User> followings;
 	private ArrayList<String> messages;
@@ -31,19 +31,19 @@ public class User extends Observable implements Users, Observer {
 		this.userUI = userUI;
 	}
 	
-	public void setGroupID(String groupID) {
-		this.groupID = groupID;
+	public void setUserGroupID(String groupID) {
+		this.userGroupID = groupID;
 	}
 	
-	public String getGroupID() {
-		return groupID;
+	public String getUserGroupID() {
+		return userGroupID;
 	}
 	
 	// Add user
 	public void addUser(User user, String userID, String groupID) {
 		this.user = user;
 		this.setUserID(userID);
-		this.setGroupID(groupID);
+		this.setUserGroupID(groupID);
 		this.followers = new ArrayList<User>();
 		this.followings = new ArrayList<User>();
 		this.newsFeed = new ArrayList<String>();
@@ -74,6 +74,7 @@ public class User extends Observable implements Users, Observer {
 	// Add a new message to news feed and notify followers
 	public void addNews(String message) {
 		newsFeed.add(user.userID + " : " + message);
+		visitor.visitMessages(message);
 		setChanged();
 		notifyObservers(newsFeed.get(newsFeed.size() - 1));
 	}
@@ -103,6 +104,7 @@ public class User extends Observable implements Users, Observer {
 	
 	@Override
 	public void accept(Visitor visitor) {
+		this.visitor = visitor;
 		visitor.visitUser(this);
 	}
 

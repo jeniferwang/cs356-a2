@@ -19,14 +19,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import cs356.a2.logic.GroupTree;
+import cs356.a2.logic.TreeView;
 import cs356.a2.users.User;
 
 public class UserUI implements UserInterface {
 
 	private JFrame frame;
 	private User user;
-	private GroupTree groupTree;
 	private boolean firstUserClick = true;
 	private boolean firstMessageClick = true;
 	private DefaultListModel<String> followingListModel, messageListModel;
@@ -34,10 +33,11 @@ public class UserUI implements UserInterface {
 	private JPanel mainPanel;
 	private JPanel followingListPanel, messageListPanel;
 	private ArrayList<User> usersFollowing;
+	private TreeView jtree;
 	
-	public UserUI(User user, GroupTree groupTree) {
+	public UserUI(User user, TreeView jtree) {
 		this.user = user;
-		this.groupTree = groupTree;
+		this.jtree = jtree;
 		init();
 	}
 	
@@ -63,8 +63,6 @@ public class UserUI implements UserInterface {
 		
 		mainPanel = new JPanel(mainGrid);
 		JPanel topPanel = new JPanel(mainGrid);
-		//topPanel.setPreferredSize(new Dimension(500,100));
-		System.out.println(frame.getSize().width);
 		JPanel bottomPanel = new JPanel(mainGrid);
 		JPanel followingInputPanel = new JPanel();
 		followingListPanel = new JPanel();
@@ -97,8 +95,8 @@ public class UserUI implements UserInterface {
 			public void actionPerformed(ActionEvent ae) {
 				String userIDInput = userIDTextField.getText();
 				if (!userIDInput.equals("")) {
-					if (groupTree.userExistsInTree(userIDInput)) {
-						User addFollowingUser = groupTree.getUserFromTree(userIDInput);
+					if (jtree.nodeExists(userIDInput)) {
+						User addFollowingUser = jtree.getUserFrom(userIDInput);
 						user.addFollowing(addFollowingUser);
 						refresh();
 					} else {

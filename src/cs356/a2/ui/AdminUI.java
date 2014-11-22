@@ -20,17 +20,15 @@ import cs356.a2.logic.TreeView;
 import cs356.a2.users.Admin;
 
 // Class that generates the basic layout of the Admin UI
-public class AdminUI implements UserInterface, ActionListener {
+public class AdminUI implements UserInterface {
 
 	private static AdminUI instance;
 	private Admin admin;
+	
 	private JFrame frame;
 	private GridBagConstraints gbc;
 	
-	private JButton showUserButton;
-	private JButton showGroupButton;
 	private String input;
-	
 	private TreeView jtree;
 	
 	private AdminUI() {};
@@ -71,6 +69,7 @@ public class AdminUI implements UserInterface, ActionListener {
 		generateRightSide(layout);
 	}
 	
+	// Generate content of left column
 	public void generateLeftSide(LayoutManager layout) {
 		JPanel leftPanel = new JPanel();
 		leftPanel.setPreferredSize(new Dimension(350, 500));
@@ -90,7 +89,7 @@ public class AdminUI implements UserInterface, ActionListener {
 			public void actionPerformed(ActionEvent ae) {
 				input = JOptionPane.showInputDialog(frame, "Enter User Name", 
 						"Create New User", JOptionPane.QUESTION_MESSAGE);
-				if (input != null) {
+				if (!input.equals("")) {
 					admin.addNewUser(input);
 				}
 			}
@@ -100,7 +99,7 @@ public class AdminUI implements UserInterface, ActionListener {
 			public void actionPerformed(ActionEvent ae) {
 				input = JOptionPane.showInputDialog(frame, "Enter Group Name", 
 						"Create New User Group", JOptionPane.QUESTION_MESSAGE);
-				if (input != null) {
+				if (!input.equals("")) {
 					admin.addNewUserGroup(input);
 				}
 			}
@@ -122,6 +121,7 @@ public class AdminUI implements UserInterface, ActionListener {
 		frame.add(leftPanel);
 	}
 	
+	// Generate right side column
 	public void generateRightSide(LayoutManager layout) {
 		JPanel rightPanel = new JPanel();
 		rightPanel.setPreferredSize(new Dimension(290, 500));
@@ -137,7 +137,7 @@ public class AdminUI implements UserInterface, ActionListener {
 		openUserViewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				if (!jtree.isUserGroup()) {
-					admin.getSelectedUser(jtree.getSelectedUserNode());
+					admin.getSelectedUserView(jtree.getSelectedUserNode());
 				}
 			}
 		});
@@ -147,16 +147,43 @@ public class AdminUI implements UserInterface, ActionListener {
 		JPanel bottomRightPanel = new JPanel();
 		bottomRightPanel.setLayout(new GridLayout(2,2));
 		
-		showUserButton = new JButton("Show User Total");
+		JButton showUserButton = new JButton("Show User Total");
 		
-		showUserButton.addActionListener(this);
+		showUserButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				JOptionPane.showMessageDialog(frame,
+						"Total number of users: " + admin.getTotalUsers(), 
+						"Show User Total", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
 		
-		showGroupButton = new JButton("Show User Group Total");
+		JButton showGroupButton = new JButton("Show User Group Total");
 		
-		showGroupButton.addActionListener(this);
+		showGroupButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				JOptionPane.showMessageDialog(frame,
+						"Total number of user groups: " + admin.getTotalUserGroups(), 
+						"Show User Total", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
 		
 		JButton showMessagesButton = new JButton("Show Messages Total");
+		showMessagesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				JOptionPane.showMessageDialog(frame,
+						"Total number of messages: " + admin.getTotalMessages(), 
+						"Show Total Messages", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		
 		JButton showPositiveButton = new JButton("Show Positive Percentage");
+		showPositiveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				JOptionPane.showMessageDialog(frame,
+						"Total number of positive messages: " + admin.getTotalPositiveMessages() + "%", 
+						"Show Total Positive Messages", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
 		
 		bottomRightPanel.add(showUserButton);
 		bottomRightPanel.add(showGroupButton);
@@ -172,20 +199,6 @@ public class AdminUI implements UserInterface, ActionListener {
 		
 		((GridBagLayout) layout).setConstraints(rightPanel, gbc);
 		frame.add(rightPanel);
-	}
-	
-	// Change to anonymous listener!
-	public void actionPerformed(ActionEvent evt) {
-		Object src = evt.getSource();
-		if (src == showUserButton) {
-			JOptionPane.showMessageDialog(frame,
-			"Total number of users : " + admin.getTotalUsers(), 
-			"Show User Total", JOptionPane.PLAIN_MESSAGE);
-		} else if (src == showGroupButton){
-			JOptionPane.showMessageDialog(frame,
-			"Total number of user groups : " + admin.getTotalUserGroups(), 
-			"Show User Total", JOptionPane.PLAIN_MESSAGE);
-		}
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
 				nameLabel.setIcon(UIManager.getIcon("FileView.directoryIcon"));
 			}
 			if (selected) {
-				nameLabel.setForeground(Color.RED);
+				nameLabel.setForeground(Color.BLUE);
 			} else {
 				nameLabel.setForeground(Color.BLACK);
 			}

@@ -51,7 +51,7 @@ public class UserGroup implements Users {
 	public User getUser(String user) {
 		for (User u : userList) {
 			// System.out.println("User in list: " + u.getGroupID());
-			if(u.getGroupID().equals(user)) {
+			if(u.getUserGroupID().equals(user)) {
 				return u;
 			}
 		}
