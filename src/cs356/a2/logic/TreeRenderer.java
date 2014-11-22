@@ -26,17 +26,14 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
 
 	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value,
-			boolean sel, boolean expanded, boolean leaf, int row,
-			boolean hasFocus) {
+			boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
-		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
-				row, hasFocus);
+		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
 		Component returnValue = null;
 
 		if ((value != null) && (value instanceof DefaultMutableTreeNode)) {
-			Object userObject = ((DefaultMutableTreeNode) value)
-					.getUserObject();
+			Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
 			if (userObject instanceof User) {
 				User user = (User) userObject;
 				nameLabel.setText(user.getUserID());

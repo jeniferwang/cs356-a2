@@ -79,6 +79,7 @@ public class User extends Observable implements Users, Observer {
 		notifyObservers(newsFeed.get(newsFeed.size() - 1));
 	}
 
+	// Return latest messages
 	public ArrayList<String> getLatestMessage() {
 		if (messages.size() > 0) {
 			return messages;

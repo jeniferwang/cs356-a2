@@ -36,16 +36,14 @@ public class TreeView extends JPanel {
 		rootNode = new DefaultMutableTreeNode(rootGroup);
 		treeModel = new DefaultTreeModel(rootNode);
 		tree = new JTree(treeModel);
-		tree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.setCellRenderer(new TreeRenderer());
 
 		// Listens if selected node's value is changed
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
-				node = (DefaultMutableTreeNode) tree
-						.getLastSelectedPathComponent();
+				node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 				if (node == null) {
 					return;
 				}
@@ -69,8 +67,7 @@ public class TreeView extends JPanel {
 		if (parentPath == null) {
 			parentNode = rootNode;
 		} else {
-			parentNode = (DefaultMutableTreeNode) (parentPath
-					.getLastPathComponent());
+			parentNode = (DefaultMutableTreeNode) (parentPath.getLastPathComponent());
 		}
 
 		return addObject(parentNode, child, name, true);
@@ -80,13 +77,12 @@ public class TreeView extends JPanel {
 		return parentNode.getUserObject();
 	}
 
-	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,
-			Object child, String name) {
+	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, Object child, String name) {
 		return addObject(parent, child, name, false);
 	}
 
-	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,
-			Object child, String name, boolean shouldBeVisible) {
+	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, Object child, String name, 
+			boolean shouldBeVisible) {
 		DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
 
 		if (parent == null) {
@@ -119,8 +115,7 @@ public class TreeView extends JPanel {
 		String thisID = null;
 		Enumeration en = rootNode.breadthFirstEnumeration();
 		while (en.hasMoreElements()) {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) en
-					.nextElement();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
 			Object nodeInfo = node.getUserObject();
 			if (nodeInfo instanceof User) {
 				thisUser = (User) nodeInfo;
@@ -141,8 +136,7 @@ public class TreeView extends JPanel {
 		User thisUser = null;
 		Enumeration en = rootNode.breadthFirstEnumeration();
 		while (en.hasMoreElements()) {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) en
-					.nextElement();
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
 			Object nodeInfo = node.getUserObject();
 			if (nodeInfo instanceof User) {
 				thisUser = (User) nodeInfo;

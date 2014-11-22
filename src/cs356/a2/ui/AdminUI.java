@@ -163,33 +163,26 @@ public class AdminUI implements UserInterface {
 
 		showGroupButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JOptionPane.showMessageDialog(
-						frame,
-						"Total number of user groups: "
-								+ admin.getTotalUserGroups(),
-						"Show User Total", JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(frame, "Total number of user groups: "
+						+ admin.getTotalUserGroups(), "Show User Total", 
+						JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 
 		JButton showMessagesButton = new JButton("Show Messages Total");
 		showMessagesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JOptionPane
-						.showMessageDialog(frame, "Total number of messages: "
-								+ admin.getTotalMessages(),
-								"Show Total Messages",
-								JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(frame, "Total number of messages: "
+						+ admin.getTotalMessages(), "Show Total Messages",
+						JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 
 		JButton showPositiveButton = new JButton("Show Positive Percentage");
 		showPositiveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				JOptionPane.showMessageDialog(
-						frame,
-						"Total number of positive messages: "
-								+ admin.getTotalPositiveMessages() + "%",
-						"Show Total Positive Messages",
+				JOptionPane.showMessageDialog(frame, "Total number of positive messages: "
+						+ admin.getTotalPositiveMessages() + "%", "Show Total Positive Messages",
 						JOptionPane.PLAIN_MESSAGE);
 			}
 		});
