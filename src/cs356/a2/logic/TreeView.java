@@ -30,6 +30,7 @@ public class TreeView extends JPanel {
 	private UserGroup rootGroup, currentUserGroupNode;
 
 	public TreeView() {
+		// Initializes tree and root node
 		renderer = new TreeRenderer();
 		rootGroup = new UserGroup();
 		rootGroup.setGroup("Root", null);
@@ -75,14 +76,11 @@ public class TreeView extends JPanel {
 		return addObject(parentNode, child, name, true);
 	}
 
-	public Object getParentGroup() {
-		return parentNode.getUserObject();
-	}
-
 	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, Object child, String name) {
 		return addObject(parent, child, name, false);
 	}
 
+	// Adds the User or UserGroup in a recursive call
 	public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, Object child, String name, 
 			boolean shouldBeVisible) {
 		DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
@@ -105,6 +103,11 @@ public class TreeView extends JPanel {
 			tree.scrollPathToVisible(new TreePath(childNode.getPath()));
 		}
 		return childNode;
+	}
+	
+	// Returns the parent group node
+	public Object getParentGroup() {
+		return parentNode.getUserObject();
 	}
 
 	// Returns true if ID already exists in tree, else false
