@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -102,10 +103,12 @@ public class UserUI implements UserInterface {
 						user.addFollowing(addFollowingUser);
 						refresh();
 					} else {
-						// TODO handle if user doesn't exist
+						JOptionPane.showMessageDialog(frame, "Please input an existing user.", 
+								"Warning: User Doesn't Exist", JOptionPane.WARNING_MESSAGE);
 					}
 				} else {
-					// TODO handle empty string
+					JOptionPane.showMessageDialog(frame, "Please input a user.", 
+							"Warning: Empty Input", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -147,7 +150,8 @@ public class UserUI implements UserInterface {
 					user.addNews(userMessage);
 					messageTextField.setText("");
 				} else {
-					// TODO Handle case when user enters blank message
+					JOptionPane.showMessageDialog(frame, "Please input a user.", 
+							"Warning: Empty Input", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});

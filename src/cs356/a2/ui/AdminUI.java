@@ -88,10 +88,15 @@ public class AdminUI implements UserInterface {
 
 		addUserItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				input = JOptionPane.showInputDialog(frame, "Enter User Name",
+				input = (String) JOptionPane.showInputDialog(frame, "Enter User Name",
 						"Create New User", JOptionPane.QUESTION_MESSAGE);
-				if (!input.equals("")) {
-					admin.addNewUser(input);
+				if (input != null) {
+					if (!input.equals("")) {
+						admin.addNewUser(input);
+					} else {
+						JOptionPane.showMessageDialog(frame, "Please input a user name.", 
+							"Warning: Empty Input", JOptionPane.WARNING_MESSAGE);
+					}
 				}
 			}
 		});
@@ -100,8 +105,13 @@ public class AdminUI implements UserInterface {
 			public void actionPerformed(ActionEvent ae) {
 				input = JOptionPane.showInputDialog(frame, "Enter Group Name",
 						"Create New User Group", JOptionPane.QUESTION_MESSAGE);
-				if (!input.equals("")) {
-					admin.addNewUserGroup(input);
+				if (input != null) {
+					if (!input.equals("")) {
+						admin.addNewUserGroup(input);
+					} else {
+						JOptionPane.showMessageDialog(frame, "Please input a user group.", 
+								"Warning: Empty Input", JOptionPane.WARNING_MESSAGE);
+					}
 				}
 			}
 		});
@@ -131,7 +141,8 @@ public class AdminUI implements UserInterface {
 
 		JPanel topRightPanel = new JPanel(new GridLayout(2, 0));
 
-		JLabel tips = new JLabel("Some tips");
+		JLabel tips = new JLabel("<html> Right click on TreeView to bring up 'Add User'<br/> "
+				+ "and 'Add User Group' menu items. </html>");
 		topRightPanel.add(tips);
 
 		JButton openUserViewButton = new JButton("Open User View");

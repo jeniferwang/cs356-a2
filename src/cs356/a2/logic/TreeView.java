@@ -44,6 +44,8 @@ public class TreeView extends JPanel {
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
 				node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+				parentPath = tree.getSelectionPath();
+				parentNode = (DefaultMutableTreeNode) (parentPath.getLastPathComponent());
 				if (node == null) {
 					return;
 				}
@@ -89,17 +91,14 @@ public class TreeView extends JPanel {
 			parent = rootNode;
 		}
 
-		if (child instanceof User) {
-			childNode.setAllowsChildren(false);
-			// TODO handle case for adding user in user
-			treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
-		} else if (child instanceof UserGroup) {
-			childNode.setAllowsChildren(true);
-			treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
-		}
-
-		if (parent == null) {
-			parent = rootNode;
+		if (parent.getAllowsChildren()) {
+			if (child instanceof User && parent.getAllowsChildren()) {
+				childNode.setAllowsChildren(false);
+				treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
+			} else if (child instanceof UserGroup) {
+				childNode.setAllowsChildren(true);
+				treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
+			}
 		}
 
 		if (shouldBeVisible) {

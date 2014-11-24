@@ -5,8 +5,9 @@ import cs356.a2.users.UserGroup;
 
 public class AdminVisitor implements Visitor {
 
-	private int totalUser, totalGroup, totalMessages;
-	private double totalPositive;
+	private int totalUser, totalGroup;
+	private int totalMessages = 0;
+	private double totalPositive = 0.0;
 	private String[] positiveWords = { "good", "nice", "wonderful", "happy" };
 
 	@Override
@@ -56,6 +57,9 @@ public class AdminVisitor implements Visitor {
 	}
 
 	public double getPositivePercentage() {
+		if (totalMessages == 0) {
+			return 0;
+		}
 		return totalPositive / totalMessages * 100;
 	}
 

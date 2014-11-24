@@ -23,8 +23,7 @@ public class Admin {
 	public void addNewUser(String userID) {
 		// Check if user exists
 		if (jtree.nodeExists(userID)) {
-			// TODO handle if user id already exists
-			System.out.println("Already exists!");
+			throw new IllegalArgumentException("User already exists!"); 
 		} else {
 			user = new User();
 			group = jtree.getSelectedUserGroupNode();
@@ -38,8 +37,7 @@ public class Admin {
 	// Add a new user group
 	public void addNewUserGroup(String groupID) {
 		if (jtree.nodeExists(groupID)) {
-			// TODO handle if user id already exists
-			System.out.println("Already exists!");
+			throw new IllegalArgumentException("User Group already exists!"); 
 		} else {
 			UserGroup parentGroup = group;
 			group = new UserGroup();
