@@ -18,6 +18,7 @@ public class User extends Observable implements Users, Observer {
 	private ArrayList<String> messages;
 	private ArrayList<String> newsFeed;
 	public UserUI userUI;
+	private long creationTime, lastUpdateTime;
 
 	public void setUserID(String userID) {
 		this.userID = userID;
@@ -49,6 +50,7 @@ public class User extends Observable implements Users, Observer {
 		this.newsFeed = new ArrayList<String>();
 		this.messages = new ArrayList<String>();
 		user.addObserver(user);
+		setTimeStamp();
 	}
 
 	// Add the users following this user
@@ -100,6 +102,7 @@ public class User extends Observable implements Users, Observer {
 	@Override
 	public void update(Observable observable, Object object) {
 		messages.add(object.toString());
+		lastUpdateTime = System.currentTimeMillis();
 		userUI.refresh();
 	}
 
@@ -109,4 +112,17 @@ public class User extends Observable implements Users, Observer {
 		visitor.visitUser(this);
 	}
 
+	@Override
+	public void setTimeStamp() {
+		creationTime = System.currentTimeMillis();
+	}
+
+	@Override
+	public long getTimeStamp() {
+		return creationTime;
+	}
+
+	public long getLastUpdateTime() {
+		return lastUpdateTime;
+	}
 }

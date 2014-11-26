@@ -1,6 +1,7 @@
 package cs356.a2.users;
 
 import cs356.a2.logic.TreeView;
+import cs356.a2.ui.AdminUI;
 import cs356.a2.ui.UserUI;
 import cs356.a2.visitor.AdminVisitor;
 

@@ -50,11 +50,11 @@ public class TreeView extends JPanel {
 				if (node == null) {
 					return;
 				}
-				Object nodeInfo = node.getUserObject();
-				if (nodeInfo instanceof User) {
-					currentNode = (User) nodeInfo;
-				} else if (nodeInfo instanceof UserGroup) {
-					currentNode = (UserGroup) nodeInfo;
+				Object thisNode = node.getUserObject();
+				if (thisNode instanceof User) {
+					currentNode = (User) thisNode;
+				} else if (thisNode instanceof UserGroup) {
+					currentNode = (UserGroup) thisNode;
 				}
 			}
 		});
@@ -118,12 +118,12 @@ public class TreeView extends JPanel {
 		Enumeration en = rootNode.breadthFirstEnumeration();
 		while (en.hasMoreElements()) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
-			Object nodeInfo = node.getUserObject();
-			if (nodeInfo instanceof User) {
-				thisUser = (User) nodeInfo;
+			Object thisNode = node.getUserObject();
+			if (thisNode instanceof User) {
+				thisUser = (User) thisNode;
 				thisID = thisUser.getUserID();
-			} else if (nodeInfo instanceof UserGroup) {
-				thisUserGroup = (UserGroup) nodeInfo;
+			} else if (thisNode instanceof UserGroup) {
+				thisUserGroup = (UserGroup) thisNode;
 				thisID = thisUserGroup.getGroupID();
 			}
 			if (thisID.equals(id)) {
@@ -131,6 +131,47 @@ public class TreeView extends JPanel {
 			}
 		}
 		return false;
+	}
+	
+	// Checks on validation. Returns true if 1) all unique IDs and 2) no spaces
+	public boolean isValidation() {
+		User thisUser, thatUser;
+		UserGroup thisUserGroup, thatUserGroup;
+		String thisID = null;
+		String thatID = null;
+		int count;
+		Enumeration enThis = rootNode.breadthFirstEnumeration();
+		while (enThis.hasMoreElements()) {
+			count = 0;
+			DefaultMutableTreeNode nodeThis = (DefaultMutableTreeNode) enThis.nextElement();
+			Object thisNodeObject = nodeThis.getUserObject();
+			if (thisNodeObject instanceof User) {
+				thisUser = (User) thisNodeObject;
+				thisID = thisUser.getUserID();
+			} else if (thisNodeObject instanceof UserGroup) {
+				thisUserGroup = (UserGroup) thisNodeObject;
+				thisID = thisUserGroup.getGroupID();
+			}
+			Enumeration enThat = rootNode.breadthFirstEnumeration();
+			while (enThat.hasMoreElements()) {
+				DefaultMutableTreeNode nodeThat = (DefaultMutableTreeNode) enThat.nextElement();
+				Object thatNodeObject = nodeThat.getUserObject();
+				if (thatNodeObject instanceof User) {
+					thatUser = (User) thatNodeObject;
+					thatID = thatUser.getUserID();
+				} else if (thatNodeObject instanceof UserGroup) {
+					thatUserGroup = (UserGroup) thatNodeObject;
+					thatID = thatUserGroup.getGroupID();
+				}
+				if (thatID.equals(thisID)) {
+					count++;
+				}
+			}
+			if ((count > 1) || thisID.contains(" ")) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	// Returns the User from userID

@@ -27,9 +27,11 @@ public class AdminUI implements UserInterface {
 
 	private JFrame frame;
 	private GridBagConstraints gbc;
+	private JPanel mainPanel;
 
-	private String input;
+	private String input, lastUpdatedUser;
 	private TreeView jtree;
+	private JLabel lastUpdated;
 
 	private AdminUI() {
 	};
@@ -46,7 +48,7 @@ public class AdminUI implements UserInterface {
 		admin = new Admin();
 		jtree = new TreeView();
 		admin.setTree(jtree);
-		setFrame(700, 550);
+		setFrame(800, 650);
 		setLayout(new GridBagLayout());
 		showFrame();
 	}
@@ -66,8 +68,11 @@ public class AdminUI implements UserInterface {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 
+		mainPanel = new JPanel();
 		generateLeftSide(layout);
 		generateRightSide(layout);
+		
+		frame.add(mainPanel);
 	}
 
 	// Generate content of left column
@@ -130,7 +135,7 @@ public class AdminUI implements UserInterface {
 
 		leftPanel.addMouseListener(mouseListener);
 
-		frame.add(leftPanel);
+		mainPanel.add(leftPanel);
 	}
 
 	// Generate right side column
@@ -144,6 +149,8 @@ public class AdminUI implements UserInterface {
 		JLabel tips = new JLabel("<html> Right click on TreeView to bring up 'Add User'<br/> "
 				+ "and 'Add User Group' menu items. </html>");
 		topRightPanel.add(tips);
+		lastUpdated = new JLabel("Last updated user: ");
+		
 
 		JButton openUserViewButton = new JButton("Open User View");
 
@@ -158,7 +165,7 @@ public class AdminUI implements UserInterface {
 		topRightPanel.add(openUserViewButton);
 
 		JPanel bottomRightPanel = new JPanel();
-		bottomRightPanel.setLayout(new GridLayout(2, 2));
+		bottomRightPanel.setLayout(new GridLayout(3, 2));
 
 		JButton showUserButton = new JButton("Show User Total");
 
@@ -197,11 +204,30 @@ public class AdminUI implements UserInterface {
 						JOptionPane.PLAIN_MESSAGE);
 			}
 		});
+		
+		JButton showValidation = new JButton("Show Validation");
+		showValidation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				JOptionPane.showMessageDialog(frame, "ID Validation is: " + jtree.isValidation(),
+						"Show ID Validation", JOptionPane.PLAIN_MESSAGE);
+			}
+		});
+		
+		JButton showLastUpdated = new JButton("Last Updated User");
+		showLastUpdated.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				JOptionPane.showMessageDialog(frame, "Last updated user: "
+						+ lastUpdatedUser, "Show Last Updated User",
+						JOptionPane.PLAIN_MESSAGE);
+			}
+		});
 
 		bottomRightPanel.add(showUserButton);
 		bottomRightPanel.add(showGroupButton);
 		bottomRightPanel.add(showMessagesButton);
 		bottomRightPanel.add(showPositiveButton);
+		bottomRightPanel.add(showValidation);
+		bottomRightPanel.add(showLastUpdated);
 
 		rightPanel.add(topRightPanel);
 		rightPanel.add(bottomRightPanel);
@@ -211,13 +237,18 @@ public class AdminUI implements UserInterface {
 		gbc.gridy = 0;
 
 		((GridBagLayout) layout).setConstraints(rightPanel, gbc);
-		frame.add(rightPanel);
+		mainPanel.add(rightPanel);
 	}
 
 	@Override
 	public void showFrame() {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+	}
+	
+	// Returns the last updated user
+	public void setLastUpdated(String userID) {
+		lastUpdatedUser = userID;
 	}
 
 }

@@ -9,6 +9,7 @@ public class UserGroup implements Users {
 	private String groupID;
 	private UserGroup parentGroup;
 	private ArrayList<User> userList;
+	private long creationTime;
 
 	public void setGroupID(String groupID) {
 		this.groupID = groupID;
@@ -31,6 +32,7 @@ public class UserGroup implements Users {
 		userList = new ArrayList<User>();
 		setGroupID(id);
 		setParentGroup(parent);
+		setTimeStamp();
 	}
 
 	public void addUserToGroup(User user) {
@@ -65,6 +67,16 @@ public class UserGroup implements Users {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visitUserGroups(this);
+	}
+
+	@Override
+	public void setTimeStamp() {
+		creationTime = System.currentTimeMillis();
+	}
+
+	@Override
+	public long getTimeStamp() {
+		return creationTime;
 	}
 
 }

@@ -31,12 +31,14 @@ public class UserUI implements UserInterface {
 	private boolean firstMessageClick = true;
 	private DefaultListModel<String> followingListModel, messageListModel;
 	private JList<String> followingView, messageView;
-	private JPanel mainPanel;
-	private JPanel followingListPanel, messageListPanel;
+	private JPanel mainPanel, followingListPanel, messageListPanel;
+	private JLabel userLastUpdate;
 	private ArrayList<User> usersFollowing;
 	private TreeView jtree;
+	private AdminUI adminUI;
 
 	public UserUI(User user, TreeView jtree) {
+		this.adminUI = AdminUI.getInstance();
 		this.user = user;
 		this.jtree = jtree;
 		init();
@@ -44,7 +46,7 @@ public class UserUI implements UserInterface {
 
 	@Override
 	public void init() {
-		setFrame(700, 550);
+		setFrame(700, 650);
 		setLayout(new FlowLayout());
 		showFrame();
 	}
@@ -60,23 +62,28 @@ public class UserUI implements UserInterface {
 	public void setLayout(LayoutManager layout) {
 		frame.getContentPane().setLayout(layout);
 
-		GridLayout mainGrid = new GridLayout(2, 1);
-
+		GridLayout mainGrid = new GridLayout(3, 1);
+		GridLayout sideGrid = new GridLayout(2, 1);
+		GridLayout infoGrid = new GridLayout(1, 2);
+		
 		mainPanel = new JPanel(mainGrid);
-		JPanel topPanel = new JPanel(mainGrid);
-		JPanel bottomPanel = new JPanel(mainGrid);
+		JPanel topPanel = new JPanel(sideGrid);
+		JPanel bottomPanel = new JPanel(sideGrid);
+		JPanel updateInfoPanel = new JPanel(infoGrid);
 		JPanel followingInputPanel = new JPanel();
 		followingListPanel = new JPanel();
 		JPanel messageInputPanel = new JPanel();
 		messageListPanel = new JPanel();
 
-		mainPanel.add(topPanel);
-		mainPanel.add(bottomPanel);
-		topPanel.add(followingInputPanel);
-		topPanel.add(followingListPanel);
-		bottomPanel.add(messageInputPanel);
-		bottomPanel.add(messageListPanel);
-
+		JLabel userCreationTime = new JLabel();
+		userCreationTime.setText("User creation time: " + String.valueOf(user.getTimeStamp()));
+		
+		userLastUpdate = new JLabel();
+		updateLastUpdateTime();
+		
+		updateInfoPanel.add(userCreationTime);
+		updateInfoPanel.add(userLastUpdate);
+		
 		JTextField userIDTextField = new JTextField(20);
 		userIDTextField.setText("Enter User ID");
 
@@ -149,6 +156,7 @@ public class UserUI implements UserInterface {
 				if (!userMessage.equals("")) {
 					user.addNews(userMessage);
 					messageTextField.setText("");
+					adminUI.setLastUpdated(user.getUserID());
 				} else {
 					JOptionPane.showMessageDialog(frame, "Please input a user.", 
 							"Warning: Empty Input", JOptionPane.WARNING_MESSAGE);
@@ -176,9 +184,21 @@ public class UserUI implements UserInterface {
 		mainPanel.add(topPanel);
 		mainPanel.add(bottomPanel);
 		frame.add(mainPanel);
+		
+		mainPanel.add(topPanel);
+		mainPanel.add(bottomPanel);
+		mainPanel.add(updateInfoPanel);
+		topPanel.add(followingInputPanel);
+		topPanel.add(followingListPanel);
+		bottomPanel.add(messageInputPanel);
+		bottomPanel.add(messageListPanel);
 
 	}
 
+	public void updateLastUpdateTime() {
+		userLastUpdate.setText("User last update time: " + String.valueOf(user.getLastUpdateTime()));
+	}
+	
 	public void setFollowingList() {
 		usersFollowing = user.getFollowing();
 		followingListModel.clear();
@@ -203,6 +223,7 @@ public class UserUI implements UserInterface {
 	public void refresh() {
 		setFollowingList();
 		setMessageList();
+		updateLastUpdateTime();
 		mainPanel.revalidate();
 		mainPanel.repaint();
 	}
